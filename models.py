@@ -76,6 +76,7 @@ class Equipment(db.Model):
     name = db.Column(db.String(200), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     photo_filename = db.Column(db.String(255))
+    icon = db.Column(db.String(50))  # Store icon name (e.g., 'tool', 'truck', 'cpu')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationship

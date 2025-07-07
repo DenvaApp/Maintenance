@@ -16,6 +16,20 @@ class EquipmentForm(FlaskForm):
         Optional(),
         FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Images only!')
     ])
+    icon = SelectField('Equipment Icon (Alternative to Photo)', choices=[
+        ('', 'No Icon'),
+        ('pepper-shoots', '🌶️ Pepper Shoots'),
+        ('pepper-bin', '🗃️ Pepper Bin'),
+        ('tow-buggy', '🚚 Tow Buggy'),
+        ('spray-robot', '🤖 Spray Robot'),
+        ('spray-wagon', '🚛 Spray Wagon'),
+        ('motor', '⚙️ Motor'),
+        ('forklift', '🚜 Forklift'),
+        ('scissor-lift', '🚜 Scissor Lift'),
+        ('greenhouse-fan', '💨 Greenhouse Fan'),
+        ('heating-system', '🔥 Heating System'),
+        ('irrigation-system', '💧 Irrigation System')
+    ], validators=[Optional()])
 
 class WorkLogForm(FlaskForm):
     equipment_id = HiddenField('Equipment ID', validators=[DataRequired()])
