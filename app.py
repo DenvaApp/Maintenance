@@ -27,11 +27,21 @@ login_manager.login_message = 'Please enter your 4-digit code to access the app.
 login_manager.login_message_category = 'info'
 
 # Configure the database
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///maintenance.db")
+database_url = os.environ.get("DATABASE_URL", "sqlite:///maintenance.db")
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_recycle": 300,
     "pool_pre_ping": True,
 }
+
+# Log database connection info (without showing sensitive data)
+if database_url.startswith("postgresql"):
+    app.logger.info("Using PostgreSQL database")
+else:
+    app.logger.info("Using SQLite database")
+    
+# Ensure database operations are properly tracked
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Configure file uploads
 app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'uploads')

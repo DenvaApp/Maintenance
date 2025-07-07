@@ -141,13 +141,18 @@ def add_equipment():
         equipment = Equipment(
             name=form.name.data,
             category_id=form.category_id.data,
-            photo_filename=photo_filename
+            photo_filename=photo_filename,
+            icon=form.icon.data if form.icon.data else None
         )
         
-        db.session.add(equipment)
-        db.session.commit()
+        try:
+            db.session.add(equipment)
+            db.session.commit()
+            flash('Equipment added successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error adding equipment: {str(e)}', 'error')
         
-        flash('Equipment added successfully!', 'success')
         return redirect(url_for('equipment_list'))
     
     return render_template('add_equipment.html', form=form)
@@ -188,6 +193,7 @@ def edit_equipment(equipment_id):
         # Update equipment details
         equipment.name = form.name.data
         equipment.category_id = form.category_id.data
+        equipment.icon = form.icon.data if form.icon.data else None
         
         db.session.commit()
         flash('Equipment updated successfully!', 'success')

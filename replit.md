@@ -117,7 +117,10 @@ The application is configured for easy deployment on Render using:
 - ProxyFix middleware for deployment behind reverse proxy
 
 ## Changelog
-- July 07, 2025. Initial setup
+- July 07, 2025. Initial setup  
+- July 07, 2025. Fixed critical data persistence issue with database commits and error handling
+- July 07, 2025. Added comprehensive greenhouse equipment icon system with 11 custom SVG icons
+- July 07, 2025. Updated forms to include only specific greenhouse equipment options
 
 ## User Preferences
 
