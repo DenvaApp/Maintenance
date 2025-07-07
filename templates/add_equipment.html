@@ -44,7 +44,7 @@
                         {% endif %}
                     </div>
                     
-                    <div class="mb-4">
+                    <div class="mb-3">
                         {{ form.photo.label(class="form-label") }}
                         {{ form.photo(class="form-control", accept="image/*") }}
                         {% if form.photo.errors %}
@@ -55,6 +55,19 @@
                             </div>
                         {% endif %}
                         <small class="text-muted">Supported formats: JPG, PNG, GIF (max 16MB)</small>
+                    </div>
+                    
+                    <div class="mb-4">
+                        {{ form.icon.label(class="form-label") }}
+                        {{ form.icon(class="form-select") }}
+                        {% if form.icon.errors %}
+                            <div class="text-danger">
+                                {% for error in form.icon.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <small class="text-muted">Choose an icon if you don't want to upload a photo</small>
                     </div>
                     
                     <div class="d-flex gap-2">
