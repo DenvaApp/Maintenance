@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i data-feather="download" class="me-2"></i>
+                    Export Maintenance Logs
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-4">Generate PDF reports of your maintenance logs for record keeping and analysis.</p>
+                
+                <!-- Monthly Export -->
+                <div class="card border-0 bg-light mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i data-feather="calendar" class="me-2"></i>
+                            Monthly Report
+                        </h5>
+                        <p class="card-text text-muted">Export all maintenance logs for a specific month.</p>
+                        
+                        <form id="monthlyForm" action="{{ url_for('export_pdf') }}" method="GET" class="row g-3">
+                            <input type="hidden" name="type" value="monthly">
+                            
+                            <div class="col-md-6">
+                                <label for="monthlyYear" class="form-label">Year</label>
+                                <select class="form-select" id="monthlyYear" name="year" required>
+                                    {% for year in range(2020, 2030) %}
+                                    <option value="{{ year }}" {% if year == current_year %}selected{% endif %}>{{ year }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="monthlyMonth" class="form-label">Month</label>
+                                <select class="form-select" id="monthlyMonth" name="month" required>
+                                    <option value="1" {% if current_month == 1 %}selected{% endif %}>January</option>
+                                    <option value="2" {% if current_month == 2 %}selected{% endif %}>February</option>
+                                    <option value="3" {% if current_month == 3 %}selected{% endif %}>March</option>
+                                    <option value="4" {% if current_month == 4 %}selected{% endif %}>April</option>
+                                    <option value="5" {% if current_month == 5 %}selected{% endif %}>May</option>
+                                    <option value="6" {% if current_month == 6 %}selected{% endif %}>June</option>
+                                    <option value="7" {% if current_month == 7 %}selected{% endif %}>July</option>
+                                    <option value="8" {% if current_month == 8 %}selected{% endif %}>August</option>
+                                    <option value="9" {% if current_month == 9 %}selected{% endif %}>September</option>
+                                    <option value="10" {% if current_month == 10 %}selected{% endif %}>October</option>
+                                    <option value="11" {% if current_month == 11 %}selected{% endif %}>November</option>
+                                    <option value="12" {% if current_month == 12 %}selected{% endif %}>December</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <i data-feather="download" class="me-2"></i>
+                                    Export Monthly PDF
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Yearly Export -->
+                <div class="card border-0 bg-light mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i data-feather="archive" class="me-2"></i>
+                            Yearly Report
+                        </h5>
+                        <p class="card-text text-muted">Export all maintenance logs for an entire year.</p>
+                        
+                        <form id="yearlyForm" action="{{ url_for('export_pdf') }}" method="GET" class="row g-3">
+                            <input type="hidden" name="type" value="yearly">
+                            
+                            <div class="col-md-6">
+                                <label for="yearlyYear" class="form-label">Year</label>
+                                <select class="form-select" id="yearlyYear" name="year" required>
+                                    {% for year in range(2020, 2030) %}
+                                    <option value="{{ year }}" {% if year == current_year %}selected{% endif %}>{{ year }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <i data-feather="download" class="me-2"></i>
+                                    Export Yearly PDF
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Quick Export Options -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <a href="{{ url_for('export_pdf', type='monthly') }}" class="btn btn-outline-primary w-100">
+                            <i data-feather="calendar" class="me-2"></i>
+                            Current Month
+                        </a>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <a href="{{ url_for('export_pdf', type='yearly') }}" class="btn btn-outline-primary w-100">
+                            <i data-feather="archive" class="me-2"></i>
+                            Current Year
+                        </a>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                        <i data-feather="arrow-left" class="me-2"></i>
+                        Back to Dashboard
+                    </a>
+                    
+                    <small class="text-muted align-self-center">
+                        PDF exports are organized by equipment and include work type, date, and notes.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add loading states to export buttons
+    const forms = document.querySelectorAll('#monthlyForm, #yearlyForm');
+    
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generating PDF...';
+            
+            // Re-enable button after a delay in case of issues
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }, 10000);
+        });
+    });
+});
+</script>
+{% endblock %}

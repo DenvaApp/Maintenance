@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="h3 mb-4">Manage Categories</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i data-feather="plus" class="me-2"></i>
+                    Add Category
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_category') }}">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control", placeholder="e.g., Greenhouse, Pepper Bins") }}
+                        {% if form.name.errors %}
+                            <div class="text-danger">
+                                {% for error in form.name.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.parent_id.label(class="form-label") }}
+                        {{ form.parent_id(class="form-select") }}
+                        {% if form.parent_id.errors %}
+                            <div class="text-danger">
+                                {% for error in form.parent_id.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <small class="text-muted">Choose a parent category to create subcategories</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i data-feather="plus" class="me-2"></i>
+                        Add Category
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i data-feather="tag" class="me-2"></i>
+                    Existing Categories
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if root_categories %}
+                    {% for root_category in root_categories %}
+                    <div class="category-tree mb-3">
+                        <!-- Root Category -->
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-0 border-bottom">
+                            <div>
+                                <strong style="color: var(--primary-color);">{{ root_category.name }}</strong>
+                                <br>
+                                <small class="text-muted">
+                                    {{ root_category.equipment|length }} equipment direct
+                                </small>
+                            </div>
+                            <div>
+                                {% set subcategories = categories|selectattr('parent_id', 'equalto', root_category.id)|list %}
+                                {% if subcategories|length == 0 and root_category.equipment|length == 0 %}
+                                <a href="{{ url_for('delete_category', category_id=root_category.id) }}" 
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Are you sure you want to delete this category?')">
+                                    <i data-feather="trash-2" class="me-1"></i>
+                                    Delete
+                                </a>
+                                {% else %}
+                                <span class="text-muted">
+                                    <i data-feather="folder" class="me-1"></i>
+                                    {{ subcategories|length }} subcategories
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Subcategories -->
+                        {% for subcategory in categories %}
+                            {% if subcategory.parent_id == root_category.id %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 ms-3 border-0 border-start border-2 ps-3">
+                                <div>
+                                    <strong>{{ subcategory.name }}</strong>
+                                    <br>
+                                    <small class="text-muted">
+                                        {{ subcategory.equipment|length }} equipment
+                                    </small>
+                                </div>
+                                <div>
+                                    {% if subcategory.equipment|length == 0 %}
+                                    <a href="{{ url_for('delete_category', category_id=subcategory.id) }}" 
+                                       class="btn btn-sm btn-outline-danger"
+                                       onclick="return confirm('Are you sure you want to delete this subcategory?')">
+                                        <i data-feather="trash-2" class="me-1"></i>
+                                        Delete
+                                    </a>
+                                    {% else %}
+                                    <span class="text-muted">
+                                        <i data-feather="package" class="me-1"></i>
+                                        Has equipment
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i data-feather="tag" class="text-muted mb-3" style="width: 48px; height: 48px;"></i>
+                        <p class="text-muted">No categories created yet.</p>
+                        <p class="text-muted">Create your first category to organize your equipment.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

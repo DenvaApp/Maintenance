@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Maintenance Log</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="login-body">
+    <div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+        <div class="row w-100 justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <div class="login-icon mb-3">
+                                <i data-feather="tool" class="feather-lg text-primary"></i>
+                            </div>
+                            <h2 class="card-title text-primary mb-2">Maintenance Log</h2>
+                            <p class="text-muted">Enter your 4-digit code to access the system</p>
+                        </div>
+
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <form method="POST">
+                            {{ form.hidden_tag() }}
+                            
+                            <div class="mb-4">
+                                <label for="{{ form.login_code.id }}" class="form-label">4-Digit Login Code</label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-light">
+                                        <i data-feather="key"></i>
+                                    </span>
+                                    {{ form.login_code(class="form-control form-control-lg text-center", 
+                                                      placeholder="0000", 
+                                                      maxlength="4",
+                                                      pattern="[0-9]{4}",
+                                                      inputmode="numeric",
+                                                      autocomplete="off") }}
+                                </div>
+                                {% if form.login_code.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.login_code.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                                <i data-feather="log-in" class="me-2"></i>
+                                Enter System
+                            </button>
+                        </form>
+
+                        <div class="text-center">
+                            <small class="text-muted">
+                                Demo codes: <strong>1234</strong> (Isaak), <strong>4567</strong> (Susie), <strong>7890</strong> (John)
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        feather.replace();
+        
+        // Auto-focus on the login code input
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeInput = document.getElementById('{{ form.login_code.id }}');
+            if (codeInput) {
+                codeInput.focus();
+                
+                // Auto-submit when 4 digits are entered
+                codeInput.addEventListener('input', function() {
+                    if (this.value.length === 4 && /^\d{4}$/.test(this.value)) {
+                        // Small delay to show the complete code
+                        setTimeout(() => {
+                            this.form.submit();
+                        }, 300);
+                    }
+                });
+                
+                // Only allow numeric input
+                codeInput.addEventListener('keypress', function(e) {
+                    if (!/\d/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'Enter'].includes(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        });
+    </script>
+    
+    <style>
+        .login-body {
+            background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+            min-height: 100vh;
+        }
+        
+        .login-icon .feather-lg {
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        .card {
+            border-radius: 1rem;
+        }
+        
+        .form-control:focus {
+            border-color: #ea580c;
+            box-shadow: 0 0 0 0.2rem rgba(234, 88, 12, 0.25);
+        }
+        
+        .input-group-text {
+            border-color: #dee2e6;
+        }
+        
+        .btn-primary {
+            background-color: #ea580c;
+            border-color: #ea580c;
+        }
+        
+        .btn-primary:hover {
+            background-color: #c2410c;
+            border-color: #c2410c;
+        }
+    </style>
+</body>
+</html>

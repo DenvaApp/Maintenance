@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">My Notifications</h1>
+            <div>
+                <a href="{{ url_for('create_notification') }}" class="btn btn-primary">
+                    <i data-feather="plus" class="me-2"></i>
+                    Create Notification
+                </a>
+                <a href="{{ url_for('manage_notifications') }}" class="btn btn-outline-secondary">
+                    <i data-feather="settings" class="me-2"></i>
+                    Manage All
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        {% if notifications %}
+        <div class="card">
+            <div class="card-body">
+                {% for notification in notifications %}
+                <div class="notification-item p-3 border-bottom {% if not notification.read %}bg-light{% endif %}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-2">
+                                <i data-feather="{{ 'alert-triangle' if notification.notification_type == 'warning' or notification.notification_type == 'overdue' else 'tool' if notification.notification_type == 'maintenance' else 'info' }}" 
+                                   class="me-2 text-{{ 'danger' if notification.notification_type == 'overdue' else 'warning' if notification.notification_type == 'warning' else 'info' if notification.notification_type == 'maintenance' else 'primary' }}"></i>
+                                <h6 class="mb-0">{{ notification.title }}</h6>
+                                
+                                {% if notification.priority == 'urgent' %}
+                                <span class="badge bg-danger ms-2">URGENT</span>
+                                {% elif notification.priority == 'high' %}
+                                <span class="badge bg-warning ms-2">HIGH</span>
+                                {% elif notification.priority == 'low' %}
+                                <span class="badge bg-secondary ms-2">LOW</span>
+                                {% endif %}
+                                
+                                {% if not notification.read %}
+                                <span class="badge bg-primary ms-2">NEW</span>
+                                {% endif %}
+                            </div>
+                            
+                            <p class="text-muted mb-2">{{ notification.message }}</p>
+                            
+                            <div class="small text-muted">
+                                <span>{{ notification.created_at.strftime('%m/%d/%Y %I:%M %p') }}</span>
+                                
+                                {% if notification.equipment_ref %}
+                                | Equipment: <strong>{{ notification.equipment_ref.name }}</strong>
+                                {% endif %}
+                                
+                                {% if notification.due_date %}
+                                | Due: <strong>{{ notification.due_date.strftime('%m/%d/%Y %I:%M %p') }}</strong>
+                                    {% if notification.is_overdue() %}
+                                    <span class="text-danger">(OVERDUE)</span>
+                                    {% endif %}
+                                {% endif %}
+                                
+                                {% if notification.user_id is none %}
+                                | <span class="text-info">System-wide</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="btn-group btn-group-sm">
+                            {% if not notification.read %}
+                            <a href="{{ url_for('mark_notification_read', notification_id=notification.id) }}" 
+                               class="btn btn-outline-success" title="Mark as read">
+                                <i data-feather="check"></i>
+                            </a>
+                            {% endif %}
+                            
+                            {% if not notification.dismissed %}
+                            <a href="{{ url_for('dismiss_notification', notification_id=notification.id) }}" 
+                               class="btn btn-outline-warning" title="Dismiss">
+                                <i data-feather="x"></i>
+                            </a>
+                            {% endif %}
+                            
+                            <a href="{{ url_for('delete_notification', notification_id=notification.id) }}" 
+                               class="btn btn-outline-danger" title="Delete"
+                               onclick="return confirm('Delete this notification?')">
+                                <i data-feather="trash-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i data-feather="bell" class="text-muted mb-3" style="width: 48px; height: 48px;"></i>
+                <h5 class="text-muted">No notifications</h5>
+                <p class="text-muted">You have no notifications at this time.</p>
+                <a href="{{ url_for('create_notification') }}" class="btn btn-primary">
+                    <i data-feather="plus" class="me-2"></i>
+                    Create First Notification
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="d-flex justify-content-between mt-4">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        <i data-feather="arrow-left" class="me-2"></i>
+        Back to Dashboard
+    </a>
+</div>
+
+<style>
+.notification-item:last-child {
+    border-bottom: none !important;
+}
+.notification-item:hover {
+    background-color: #f8f9fa !important;
+}
+</style>
+{% endblock %}

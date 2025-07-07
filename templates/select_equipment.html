@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="h3 mb-4">
+            <i data-feather="edit" class="me-2"></i>
+            Select Equipment to Log Work
+        </h1>
+    </div>
+</div>
+
+<!-- Search -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET">
+            <div class="input-group">
+                <input type="text" class="form-control form-control-lg" name="search" 
+                       value="{{ search }}" placeholder="Search equipment by name...">
+                <button type="submit" class="btn btn-primary">
+                    <i data-feather="search" class="me-2"></i>
+                    Search
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Equipment List -->
+<div class="card">
+    <div class="card-body">
+        {% if equipment %}
+        <div class="list-group list-group-flush">
+            {% for item in equipment %}
+            <a href="{{ url_for('log_work', equipment_id=item.id) }}" 
+               class="list-group-item list-group-item-action px-0 py-3 equipment-select-item">
+                <div class="d-flex align-items-center">
+                    {% if item.photo_filename %}
+                    <img src="{{ url_for('static', filename='uploads/' + item.photo_filename) }}" 
+                         class="equipment-thumbnail me-3" alt="{{ item.name }}">
+                    {% else %}
+                    <div class="equipment-thumbnail-placeholder me-3">
+                        <i data-feather="package" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">{{ item.name }}</h6>
+                                <span class="badge bg-secondary">{{ item.category_ref.name }}</span>
+                                {% if item.is_high_maintenance() %}
+                                <span class="badge bg-warning text-dark ms-1">
+                                    <i data-feather="alert-triangle" style="width: 12px; height: 12px;" class="me-1"></i>
+                                    High maintenance
+                                </span>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <a href="{{ url_for('edit_equipment', equipment_id=item.id) }}" 
+                                   class="btn btn-sm btn-outline-secondary me-2"
+                                   onclick="event.stopPropagation();">
+                                    <i data-feather="edit-2" style="width: 14px; height: 14px;"></i>
+                                </a>
+                                <i data-feather="chevron-right" class="text-muted"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i data-feather="package" class="text-muted mb-3" style="width: 64px; height: 64px;"></i>
+            <h5 class="text-muted">No Equipment Found</h5>
+            <p class="text-muted">
+                {% if search %}
+                    No equipment matches your search.
+                {% else %}
+                    You haven't added any equipment yet.
+                {% endif %}
+            </p>
+            <a href="{{ url_for('add_equipment') }}" class="btn btn-primary">
+                <i data-feather="plus" class="me-2"></i>
+                Add Equipment
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

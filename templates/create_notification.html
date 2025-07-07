@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i data-feather="bell" class="me-2"></i>
+                    Create New Notification
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label for="{{ form.title.id }}" class="form-label">Title</label>
+                            {{ form.title(class="form-control", placeholder="e.g., Equipment Maintenance Due") }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.title.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.priority.id }}" class="form-label">Priority</label>
+                            {{ form.priority(class="form-select") }}
+                            {% if form.priority.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.priority.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.message.id }}" class="form-label">Message</label>
+                        {{ form.message(class="form-control", rows="3", placeholder="Detailed description of the notification...") }}
+                        {% if form.message.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.message.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.notification_type.id }}" class="form-label">Type</label>
+                            {{ form.notification_type(class="form-select") }}
+                            {% if form.notification_type.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.notification_type.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.equipment_id.id }}" class="form-label">Equipment</label>
+                            {{ form.equipment_id(class="form-select") }}
+                            {% if form.equipment_id.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.equipment_id.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.user_id.id }}" class="form-label">Target User</label>
+                            {{ form.user_id(class="form-select") }}
+                            {% if form.user_id.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.user_id.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Select specific user or leave as "All Users" for system-wide notification</div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.due_date.id }}" class="form-label">Due Date (Optional)</label>
+                            {{ form.due_date(class="form-control") }}
+                            {% if form.due_date.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.due_date.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.repeat_days.id }}" class="form-label">Repeat Every (Days)</label>
+                        {{ form.repeat_days(class="form-control", placeholder="e.g., 30 for monthly reminder") }}
+                        {% if form.repeat_days.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.repeat_days.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Leave empty for one-time notification</div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('my_notifications') }}" class="btn btn-secondary">
+                            <i data-feather="arrow-left" class="me-2"></i>
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i data-feather="bell" class="me-2"></i>
+                            Create Notification
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i data-feather="info" class="me-2"></i>
+                    Notification Types
+                </h6>
+                <ul class="list-unstyled small text-muted mb-0">
+                    <li class="mb-1"><strong>Information:</strong> General announcements and updates</li>
+                    <li class="mb-1"><strong>Warning:</strong> Important alerts requiring attention</li>
+                    <li class="mb-1"><strong>Maintenance Required:</strong> Equipment needs maintenance</li>
+                    <li><strong>Overdue:</strong> Critical items that are past due</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
