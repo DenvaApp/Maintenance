@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">Manage All Notifications</h1>
+            <a href="{{ url_for('create_notification') }}" class="btn btn-primary">
+                <i data-feather="plus" class="me-2"></i>
+                Create Notification
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        {% if notifications %}
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Priority</th>
+                                <th>Target</th>
+                                <th>Equipment</th>
+                                <th>Due Date</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for notification in notifications %}
+                            <tr class="{% if not notification.read and not notification.dismissed %}table-warning{% elif notification.dismissed %}table-secondary{% endif %}">
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        {% if not notification.read %}
+                                        <span class="badge bg-primary mb-1">Unread</span>
+                                        {% else %}
+                                        <span class="badge bg-success mb-1">Read</span>
+                                        {% endif %}
+                                        
+                                        {% if notification.dismissed %}
+                                        <span class="badge bg-secondary">Dismissed</span>
+                                        {% endif %}
+                                        
+                                        {% if notification.is_overdue() %}
+                                        <span class="badge bg-danger">Overdue</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                
+                                <td>
+                                    <strong>{{ notification.title }}</strong>
+                                    <br>
+                                    <small class="text-muted">{{ notification.message[:60] }}{% if notification.message|length > 60 %}...{% endif %}</small>
+                                </td>
+                                
+                                <td>
+                                    <span class="badge bg-{{ 'danger' if notification.notification_type == 'overdue' else 'warning' if notification.notification_type == 'warning' else 'info' if notification.notification_type == 'maintenance' else 'primary' }}">
+                                        {{ notification.notification_type.title() }}
+                                    </span>
+                                </td>
+                                
+                                <td>
+                                    <span class="badge bg-{{ 'danger' if notification.priority == 'urgent' else 'warning' if notification.priority == 'high' else 'secondary' if notification.priority == 'low' else 'primary' }}">
+                                        {{ notification.priority.title() }}
+                                    </span>
+                                </td>
+                                
+                                <td>
+                                    {% if notification.user_ref %}
+                                    <strong>{{ notification.user_ref.display_name }}</strong>
+                                    {% else %}
+                                    <span class="text-info">All Users</span>
+                                    {% endif %}
+                                </td>
+                                
+                                <td>
+                                    {% if notification.equipment_ref %}
+                                    <strong>{{ notification.equipment_ref.name }}</strong>
+                                    <br>
+                                    <small class="text-muted">{{ notification.equipment_ref.category_ref.name }}</small>
+                                    {% else %}
+                                    <span class="text-muted">System-wide</span>
+                                    {% endif %}
+                                </td>
+                                
+                                <td>
+                                    {% if notification.due_date %}
+                                    {{ notification.due_date.strftime('%m/%d/%Y') }}
+                                    <br>
+                                    <small class="text-muted">{{ notification.due_date.strftime('%I:%M %p') }}</small>
+                                    {% if notification.repeat_days %}
+                                    <br>
+                                    <small class="text-info">Every {{ notification.repeat_days }} days</small>
+                                    {% endif %}
+                                    {% else %}
+                                    <span class="text-muted">No due date</span>
+                                    {% endif %}
+                                </td>
+                                
+                                <td>
+                                    {{ notification.created_at.strftime('%m/%d/%Y') }}
+                                    <br>
+                                    <small class="text-muted">{{ notification.created_at.strftime('%I:%M %p') }}</small>
+                                </td>
+                                
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        {% if not notification.read %}
+                                        <a href="{{ url_for('mark_notification_read', notification_id=notification.id) }}" 
+                                           class="btn btn-outline-success" title="Mark as read">
+                                            <i data-feather="check"></i>
+                                        </a>
+                                        {% endif %}
+                                        
+                                        {% if not notification.dismissed %}
+                                        <a href="{{ url_for('dismiss_notification', notification_id=notification.id) }}" 
+                                           class="btn btn-outline-warning" title="Dismiss">
+                                            <i data-feather="x"></i>
+                                        </a>
+                                        {% endif %}
+                                        
+                                        <a href="{{ url_for('delete_notification', notification_id=notification.id) }}" 
+                                           class="btn btn-outline-danger" title="Delete"
+                                           onclick="return confirm('Delete notification: {{ notification.title }}?')">
+                                            <i data-feather="trash-2"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i data-feather="bell" class="text-muted mb-3" style="width: 48px; height: 48px;"></i>
+                <h5 class="text-muted">No notifications</h5>
+                <p class="text-muted">No notifications have been created yet.</p>
+                <a href="{{ url_for('create_notification') }}" class="btn btn-primary">
+                    <i data-feather="plus" class="me-2"></i>
+                    Create First Notification
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="d-flex justify-content-between mt-4">
+    <a href="{{ url_for('my_notifications') }}" class="btn btn-secondary">
+        <i data-feather="arrow-left" class="me-2"></i>
+        Back to My Notifications
+    </a>
+    
+    {% if notifications %}
+    <small class="text-muted align-self-center">
+        Total Notifications: {{ notifications|length }}
+        | Active: {{ notifications|selectattr('read', 'equalto', false)|selectattr('dismissed', 'equalto', false)|list|length }}
+    </small>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i data-feather="users" class="me-2"></i>
+                    User Management
+                </h4>
+            </div>
+            <div class="card-body">
+                {% if users %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Display Name</th>
+                                <th>Login Code</th>
+                                <th>Status</th>
+                                <th>Work Logs</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>
+                                    <strong>{{ user.display_name }}</strong>
+                                    {% if user.id == current_user.id %}
+                                    <span class="badge bg-primary ms-1">You</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <code class="text-primary">{{ user.login_code }}</code>
+                                </td>
+                                <td>
+                                    {% if user.active %}
+                                    <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">{{ user.work_logs|length }}</span>
+                                </td>
+                                <td>
+                                    <small class="text-muted">{{ user.created_at.strftime('%m/%d/%Y') }}</small>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="{{ url_for('toggle_user_status', user_id=user.id) }}" 
+                                           class="btn btn-outline-warning"
+                                           onclick="return confirm('Toggle {{ user.display_name }} status?')">
+                                            {% if user.active %}
+                                            <i data-feather="user-x"></i>
+                                            {% else %}
+                                            <i data-feather="user-check"></i>
+                                            {% endif %}
+                                        </a>
+                                        {% if user.work_logs|length == 0 %}
+                                        <a href="{{ url_for('delete_user', user_id=user.id) }}" 
+                                           class="btn btn-outline-danger"
+                                           onclick="return confirm('Delete {{ user.display_name }}? This cannot be undone.')">
+                                            <i data-feather="trash-2"></i>
+                                        </a>
+                                        {% else %}
+                                        <button class="btn btn-outline-danger" disabled title="Cannot delete user with work logs">
+                                            <i data-feather="trash-2"></i>
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i data-feather="users" class="text-muted mb-3" style="width: 48px; height: 48px;"></i>
+                    <p class="text-muted">No users found.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i data-feather="user-plus" class="me-2"></i>
+                    Add New User
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_user') }}">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.display_name.id }}" class="form-label">Display Name</label>
+                        {{ form.display_name(class="form-control", placeholder="e.g., Sarah, Mike, Alex") }}
+                        {% if form.display_name.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.display_name.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.login_code.id }}" class="form-label">4-Digit Login Code</label>
+                        {{ form.login_code(class="form-control", 
+                                          placeholder="0000", 
+                                          maxlength="4",
+                                          pattern="[0-9]{4}",
+                                          inputmode="numeric") }}
+                        {% if form.login_code.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.login_code.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Choose a unique 4-digit code (0000-9999)</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i data-feather="plus" class="me-2"></i>
+                        Create User
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i data-feather="info" class="me-2"></i>
+                    Quick Tips
+                </h6>
+                <ul class="list-unstyled small text-muted mb-0">
+                    <li class="mb-2">• Users with work logs cannot be deleted</li>
+                    <li class="mb-2">• Inactive users cannot log in</li>
+                    <li class="mb-2">• Login codes must be unique</li>
+                    <li>• All codes are 4 digits (0000-9999)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between mt-4">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        <i data-feather="arrow-left" class="me-2"></i>
+        Back to Dashboard
+    </a>
+    
+    <small class="text-muted align-self-center">
+        Total Users: {{ users|length }}
+    </small>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-focus on display name input
+    const nameInput = document.getElementById('{{ form.display_name.id }}');
+    if (nameInput) {
+        nameInput.focus();
+    }
+    
+    // Only allow numeric input for login code
+    const codeInput = document.getElementById('{{ form.login_code.id }}');
+    if (codeInput) {
+        codeInput.addEventListener('keypress', function(e) {
+            if (!/\d/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'Enter'].includes(e.key)) {
+                e.preventDefault();
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4 mb-4">
+        <!-- Equipment Info Card -->
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h5 class="card-title mb-0">{{ equipment.name }}</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i data-feather="more-horizontal"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('edit_equipment', equipment_id=equipment.id) }}">
+                                <i data-feather="edit-3" class="me-2"></i>Edit Equipment
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('log_work', equipment_id=equipment.id) }}">
+                                <i data-feather="plus" class="me-2"></i>Log Work
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{{ url_for('delete_equipment', equipment_id=equipment.id) }}" onclick="return confirm('Delete this equipment and all its work logs?')">
+                                <i data-feather="trash-2" class="me-2"></i>Delete Equipment
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                {% if equipment.photo_filename %}
+                <div class="mb-3">
+                    <img src="{{ url_for('static', filename='uploads/' + equipment.photo_filename) }}" 
+                         class="img-fluid rounded" alt="{{ equipment.name }}" style="max-height: 200px;">
+                </div>
+                {% endif %}
+                
+                <div class="mb-3">
+                    <small class="text-muted">Category</small>
+                    <p class="mb-0"><strong>{{ equipment.category_ref.full_name }}</strong></p>
+                </div>
+                
+                <div class="mb-3">
+                    <small class="text-muted">Added</small>
+                    <p class="mb-0">{{ equipment.created_at.strftime('%B %d, %Y') }}</p>
+                </div>
+                
+                {% if last_maintenance %}
+                <div class="mb-3">
+                    <small class="text-muted">Last Maintenance</small>
+                    <p class="mb-0">{{ last_maintenance.strftime('%B %d, %Y') }}</p>
+                </div>
+                {% endif %}
+                
+                {% if equipment.is_high_maintenance() %}
+                <div class="alert alert-warning py-2 px-3 mb-0">
+                    <i data-feather="alert-triangle" class="me-2"></i>
+                    <small>High maintenance equipment</small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="card-title">Quick Stats</h6>
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div class="h4 mb-0">{{ total_logs }}</div>
+                        <small class="text-muted">Total Logs</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="h4 mb-0">{{ recent_logs }}</div>
+                        <small class="text-muted">This Month</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="h4 mb-0">{{ notifications|length }}</div>
+                        <small class="text-muted">Notifications</small>
+                    </div>
+                </div>
+                
+                {% if work_types %}
+                <hr>
+                <h6 class="mb-2">Work Types</h6>
+                {% for work_type, count in work_types.items() %}
+                <div class="d-flex justify-content-between mb-1">
+                    <small>{{ work_type }}</small>
+                    <small class="text-muted">{{ count }}</small>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-8">
+        <!-- Quick Actions -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <a href="{{ url_for('log_work', equipment_id=equipment.id) }}" class="btn btn-primary w-100">
+                            <i data-feather="plus" class="me-2"></i>
+                            Log Work
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <a href="{{ url_for('edit_equipment', equipment_id=equipment.id) }}" class="btn btn-outline-primary w-100">
+                            <i data-feather="edit-3" class="me-2"></i>
+                            Edit Equipment
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <a href="{{ url_for('create_notification') }}?equipment_id={{ equipment.id }}" class="btn btn-outline-info w-100">
+                            <i data-feather="bell" class="me-2"></i>
+                            Create Alert
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Work History -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i data-feather="activity" class="me-2"></i>
+                    Work History
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if work_logs %}
+                <div class="timeline">
+                    {% for log in work_logs %}
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-{{ 'success' if log.work_type == 'Preventative' else 'warning' if log.work_type == 'Repair' else 'info' if log.work_type == 'Inspection' else 'secondary' }}"></div>
+                        <div class="timeline-content">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="mb-1">{{ log.work_type }}</h6>
+                                    <small class="text-muted">
+                                        {{ log.date.strftime('%B %d, %Y') }} by {{ log.user_ref.display_name }}
+                                    </small>
+                                </div>
+                                <span class="badge bg-{{ 'success' if log.work_type == 'Preventative' else 'warning' if log.work_type == 'Repair' else 'info' if log.work_type == 'Inspection' else 'secondary' }}">
+                                    {{ log.work_type }}
+                                </span>
+                            </div>
+                            {% if log.notes %}
+                            <p class="mb-0 text-muted">{{ log.notes }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i data-feather="clipboard" class="text-muted mb-3" style="width: 48px; height: 48px;"></i>
+                    <h6 class="text-muted">No work history</h6>
+                    <p class="text-muted">No maintenance work has been logged for this equipment yet.</p>
+                    <a href="{{ url_for('log_work', equipment_id=equipment.id) }}" class="btn btn-primary">
+                        <i data-feather="plus" class="me-2"></i>
+                        Log First Work Entry
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Active Notifications -->
+        {% if notifications %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i data-feather="bell" class="me-2"></i>
+                    Active Notifications
+                </h6>
+            </div>
+            <div class="card-body">
+                {% for notification in notifications %}
+                <div class="alert alert-{{ 'danger' if notification.notification_type == 'overdue' else 'warning' if notification.notification_type == 'warning' else 'info' if notification.notification_type == 'maintenance' else 'primary' }} mb-2">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="alert-heading mb-1">{{ notification.title }}</h6>
+                            <p class="mb-0">{{ notification.message }}</p>
+                            <small class="text-muted">{{ notification.created_at.strftime('%m/%d/%Y %I:%M %p') }}</small>
+                        </div>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{{ url_for('mark_notification_read', notification_id=notification.id) }}" class="btn btn-outline-secondary">
+                                <i data-feather="check"></i>
+                            </a>
+                            <a href="{{ url_for('dismiss_notification', notification_id=notification.id) }}" class="btn btn-outline-secondary">
+                                <i data-feather="x"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="d-flex justify-content-between mt-4">
+    <a href="{{ url_for('equipment_list') }}" class="btn btn-secondary">
+        <i data-feather="arrow-left" class="me-2"></i>
+        Back to Equipment List
+    </a>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.75rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -1.5rem;
+    top: 0.25rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #e9ecef;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border-left: 3px solid #dee2e6;
+}
+
+.dropdown-menu {
+    min-width: 160px;
+}
+
+.card-title {
+    color: #495057;
+}
+
+.alert-heading {
+    color: inherit;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i data-feather="plus" class="me-2"></i>
+                    Add New Equipment
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control") }}
+                        {% if form.name.errors %}
+                            <div class="text-danger">
+                                {% for error in form.name.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.category_id.label(class="form-label") }}
+                        {{ form.category_id(class="form-select") }}
+                        {% if form.category_id.errors %}
+                            <div class="text-danger">
+                                {% for error in form.category_id.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {% if not form.category_id.choices %}
+                            <small class="text-muted">
+                                No categories available. 
+                                <a href="{{ url_for('categories') }}">Create a category first</a>.
+                            </small>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.photo.label(class="form-label") }}
+                        {{ form.photo(class="form-control", accept="image/*") }}
+                        {% if form.photo.errors %}
+                            <div class="text-danger">
+                                {% for error in form.photo.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <small class="text-muted">Supported formats: JPG, PNG, GIF (max 16MB)</small>
+                    </div>
+                    
+                    <div class="mb-4">
+                        {{ form.icon.label(class="form-label") }}
+                        {{ form.icon(class="form-select") }}
+                        {% if form.icon.errors %}
+                            <div class="text-danger">
+                                {% for error in form.icon.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <small class="text-muted">Choose an icon if you don't want to upload a photo</small>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i data-feather="save" class="me-2"></i>
+                            Add Equipment
+                        </button>
+                        <a href="{{ url_for('equipment_list') }}" class="btn btn-secondary">
+                            <i data-feather="arrow-left" class="me-2"></i>
+                            Back to Equipment
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
