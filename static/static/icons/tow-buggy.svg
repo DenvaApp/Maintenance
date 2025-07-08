@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Cart frame -->
+  <rect x="8" y="12" width="10" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  
+  <!-- Cart bed/platform -->
+  <rect x="8" y="14" width="10" height="2" fill="currentColor" opacity="0.3"/>
+  
+  <!-- Wheels -->
+  <circle cx="10" cy="19" r="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <circle cx="16" cy="19" r="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  
+  <!-- Tow hitch/handle extending forward -->
+  <path d="M8 15 L4 15 L3 13 L4 11 L8 11" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  
+  <!-- Hitch connection point -->
+  <circle cx="3" cy="13" r="0.5" fill="currentColor"/>
+  
+  <!-- Load/bins on cart -->
+  <rect x="9" y="10" width="2.5" height="4" rx="0.5" fill="none" stroke="currentColor" stroke-width="1"/>
+  <rect x="12" y="9" width="2.5" height="5" rx="0.5" fill="none" stroke="currentColor" stroke-width="1"/>
+  <rect x="15" y="10" width="2.5" height="4" rx="0.5" fill="none" stroke="currentColor" stroke-width="1"/>
+  
+  <!-- Cart side rails -->
+  <path d="M8 12 L8 10 L18 10 L18 12" stroke="currentColor" stroke-width="1"/>
+</svg>
