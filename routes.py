@@ -148,9 +148,11 @@ def add_equipment():
         try:
             db.session.add(equipment)
             db.session.commit()
+            app.logger.info(f"Equipment '{equipment.name}' added successfully by user {current_user.display_name}")
             flash('Equipment added successfully!', 'success')
         except Exception as e:
             db.session.rollback()
+            app.logger.error(f"Error adding equipment: {str(e)}")
             flash(f'Error adding equipment: {str(e)}', 'error')
         
         return redirect(url_for('equipment_list'))

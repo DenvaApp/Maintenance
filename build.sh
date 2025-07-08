@@ -20,4 +20,7 @@ pip install -e . || {
                 flask-login>=0.6.0
 }
 
+echo "Running database initialization..."
+python init_db.py
+
 echo "Build completed successfully!"

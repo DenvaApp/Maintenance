@@ -61,19 +61,29 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 with app.app_context():
     # Import models to ensure tables are created
     import models
-    db.create_all()
     
-    # Create default users if they don't exist
-    from models import User
-    if User.query.count() == 0:
-        default_users = [
-            User(display_name="Isaak", login_code="1234"),
-            User(display_name="Susie", login_code="4567"),
-            User(display_name="John", login_code="7890"),
-        ]
-        for user in default_users:
-            db.session.add(user)
-        db.session.commit()
+    try:
+        db.create_all()
+        app.logger.info("Database tables created successfully")
+        
+        # Create default users if they don't exist
+        from models import User
+        if User.query.count() == 0:
+            default_users = [
+                User(display_name="Isaak", login_code="1234"),
+                User(display_name="Susie", login_code="4567"),
+                User(display_name="John", login_code="7890"),
+            ]
+            for user in default_users:
+                db.session.add(user)
+            db.session.commit()
+            app.logger.info("Default users created successfully")
+        else:
+            app.logger.info(f"Database already has {User.query.count()} users")
+            
+    except Exception as e:
+        app.logger.error(f"Database initialization failed: {str(e)}")
+        db.session.rollback()
 
 @login_manager.user_loader
 def load_user(user_id):
