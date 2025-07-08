@@ -2,7 +2,7 @@ services:
   - type: web
     name: maintenance-log
     env: python
-    buildCommand: pip install --upgrade pip && pip install -e .
+    buildCommand: chmod +x build.sh && ./build.sh
     startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 1 --timeout 120 main:app
     healthCheckPath: /
     envVars:
