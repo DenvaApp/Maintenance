@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Base platform/chassis -->
+  <rect x="2" y="18" width="20" height="4" rx="1" fill="currentColor" opacity="0.2"/>
+  
+  <!-- Wheels -->
+  <circle cx="5" cy="21" r="1.5" fill="none" stroke="currentColor"/>
+  <circle cx="19" cy="21" r="1.5" fill="none" stroke="currentColor"/>
+  
+  <!-- Scissor mechanism (X pattern) -->
+  <path d="M6 18 L12 12 L18 18" stroke="currentColor" stroke-width="1.5"/>
+  <path d="M18 18 L12 12 L6 18" stroke="currentColor" stroke-width="1.5"/>
+  <path d="M8 18 L14 10 L20 18" stroke="currentColor" stroke-width="1"/>
+  <path d="M20 18 L14 10 L8 18" stroke="currentColor" stroke-width="1"/>
+  
+  <!-- Elevated platform -->
+  <rect x="8" y="8" width="8" height="2" rx="0.5" fill="currentColor"/>
+  
+  <!-- Safety railings -->
+  <path d="M8 8 L8 5 L16 5 L16 8" stroke="currentColor" stroke-width="1" fill="none"/>
+  <path d="M8 6.5 L16 6.5" stroke="currentColor" stroke-width="0.5"/>
+  
+  <!-- Person symbol on platform -->
+  <circle cx="12" cy="6.5" r="0.8" fill="none" stroke="currentColor" stroke-width="0.8"/>
+  <path d="M12 7.3 L12 8" stroke="currentColor" stroke-width="0.8"/>
+</svg>
