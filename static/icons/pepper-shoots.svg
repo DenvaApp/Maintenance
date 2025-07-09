@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Stand base -->
+  <path d="M8 20 L16 20" stroke="currentColor" stroke-width="2"/>
+  <path d="M10 20 L10 18 L14 18 L14 20" stroke="currentColor" stroke-width="1.5"/>
+  
+  <!-- Vertical support post -->
+  <path d="M12 18 L12 8" stroke="currentColor" stroke-width="2"/>
+  
+  <!-- Aluminum tubes (3 tubes) -->
+  <rect x="9" y="6" width="1.5" height="10" fill="none" stroke="currentColor" stroke-width="1"/>
+  <rect x="11.25" y="4" width="1.5" height="12" fill="none" stroke="currentColor" stroke-width="1"/>
+  <rect x="13.5" y="6" width="1.5" height="10" fill="none" stroke="currentColor" stroke-width="1"/>
+  
+  <!-- Tube tops (openings) -->
+  <ellipse cx="9.75" cy="6" rx="0.75" ry="0.3" fill="none" stroke="currentColor"/>
+  <ellipse cx="12" cy="4" rx="0.75" ry="0.3" fill="none" stroke="currentColor"/>
+  <ellipse cx="14.25" cy="6" rx="0.75" ry="0.3" fill="none" stroke="currentColor"/>
+  
+  <!-- Peppers dropping into tubes -->
+  <circle cx="9.5" cy="3.5" r="0.3" fill="currentColor"/>
+  <circle cx="12.2" cy="2.5" r="0.3" fill="currentColor"/>
+  <circle cx="14" cy="3.8" r="0.3" fill="currentColor"/>
+</svg>

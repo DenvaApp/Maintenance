@@ -25,16 +25,12 @@ function initializeSearch() {
             this.parentElement.classList.remove('search-focus');
         });
         
-        // Auto-submit search after typing (with debounce)
-        let searchTimeout;
-        input.addEventListener('input', function() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                // Only auto-submit if there's a search term or it's been cleared
-                if (this.value.length > 2 || this.value.length === 0) {
-                    this.closest('form').submit();
-                }
-            }, 500);
+        // Allow Enter key to submit search
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.closest('form').submit();
+            }
         });
     });
 }

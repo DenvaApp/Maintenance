@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Robot base/chassis -->
+  <rect x="6" y="14" width="12" height="4" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  
+  <!-- Wheels/tracks -->
+  <rect x="5" y="17" width="2" height="2" rx="1" fill="currentColor"/>
+  <rect x="17" y="17" width="2" height="2" rx="1" fill="currentColor"/>
+  <rect x="10" y="18" width="4" height="1" rx="0.5" fill="currentColor" opacity="0.3"/>
+  
+  <!-- Main body/tank -->
+  <ellipse cx="12" cy="11" rx="4" ry="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  
+  <!-- Spray arms extending from sides -->
+  <path d="M8 11 L4 11 L3 9 L4 7 L6 7" stroke="currentColor" stroke-width="1.5" fill="none"/>
+  <path d="M16 11 L20 11 L21 9 L20 7 L18 7" stroke="currentColor" stroke-width="1.5" fill="none"/>
+  
+  <!-- Spray nozzles -->
+  <circle cx="3" cy="9" r="0.5" fill="currentColor"/>
+  <circle cx="21" cy="9" r="0.5" fill="currentColor"/>
+  <circle cx="4" cy="7" r="0.3" fill="currentColor"/>
+  <circle cx="20" cy="7" r="0.3" fill="currentColor"/>
+  
+  <!-- Spray particles -->
+  <circle cx="2" cy="8" r="0.2" fill="currentColor" opacity="0.6"/>
+  <circle cx="1.5" cy="9.5" r="0.2" fill="currentColor" opacity="0.6"/>
+  <circle cx="22" cy="8" r="0.2" fill="currentColor" opacity="0.6"/>
+  <circle cx="22.5" cy="9.5" r="0.2" fill="currentColor" opacity="0.6"/>
+  
+  <!-- Control unit on top -->
+  <rect x="10" y="6" width="4" height="2" rx="0.5" fill="none" stroke="currentColor" stroke-width="1"/>
+  <circle cx="11" cy="7" r="0.3" fill="currentColor"/>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Fan housing/frame -->
+  <rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  
+  <!-- Fan blades -->
+  <path d="M12 7 Q15 9 12 12 Q9 15 12 17 Q15 15 12 12 Q9 9 12 7" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <path d="M7 12 Q9 9 12 12 Q15 9 17 12 Q15 15 12 12 Q9 15 7 12" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  
+  <!-- Center hub -->
+  <circle cx="12" cy="12" r="1" fill="currentColor"/>
+  
+  <!-- Corner mounts -->
+  <circle cx="6" cy="6" r="0.5" fill="currentColor"/>
+  <circle cx="18" cy="6" r="0.5" fill="currentColor"/>
+  <circle cx="6" cy="18" r="0.5" fill="currentColor"/>
+  <circle cx="18" cy="18" r="0.5" fill="currentColor"/>
+  
+  <!-- Motion lines -->
+  <path d="M8 8 Q10 10 8 8" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+  <path d="M16 8 Q14 10 16 8" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+</svg>
